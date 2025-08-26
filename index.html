@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ติดตามผลการเลิกบุหรี่</title>
+
+  <!-- Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Kanit">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+  <style>
+    * { font-family: "Kanit"; }
+    body { background: #dab9e6; }
+    .text-blue { color: #bc8fd0; }
+    .text-pink { color: #f13596; }
+  </style>
+</head>
+<body>
+  <div class="container my-4">
+    <div class="p-4 mb-4 bg-white rounded shadow-sm text-center">
+      <h1 class="display-6 fw-bold text-blue">แบบติดตามผล</h1>
+      <h2 class="display-6 fw-bold text-pink">กายภาพบำบัด<span class="h3 fw-bold text-dark">เพื่อสังคมไทยปลอด </span><span class="h3 fw-bold text-danger">บุหรี่</span></h2>
+      <p class="text-muted">งานกายภาพบำบัด กลุ่มงานเวชกรรมฟื้นฟู<br>โรงพยาบาลถลาง จังหวัดภูเก็ต</p>
+    </div>
+
+    <!-- Loader -->
+    <div id="loading" class="text-center p-4">
+      <div class="spinner-border text-primary" role="status"></div>
+      <p class="mt-2">กำลังโหลดข้อมูล...</p>
+    </div>
+    
+    <!-- Form -->
+    <form id="followupForm" class="row g-3 bg-white p-4 rounded shadow-sm d-none" autocomplete="off">
+
+      <input type="hidden" id="userId">
+      <div class="col-md-6">
+        <label class="form-label">ชื่อ</label>
+        <input type="text" class="form-control" id="firstName" readonly>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">นามสกุล</label>
+        <input type="text" class="form-control" id="lastName" readonly>
+      </div>
+
+      <!-- Smoking history -->
+      <h5 class="fw-bold">ประวัติการสูบบุหรี่ (ติดตามผล)</h5>
+
+      <div class="col-md-6">
+        <label class="form-label">สูบวันละกี่มวน</label>
+        <input type="number" class="form-control" id="cigarettesPerDay" min="0" required>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">สูบมากี่ปี</label>
+        <input type="number" class="form-control" id="smokingYears" min="0" required>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">กี่เดือน</label>
+        <input type="number" class="form-control" id="smokingMonths" min="0" max="11" required>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">เคยเลิกกี่ครั้ง</label>
+        <input type="number" class="form-control" id="quitAttempts" min="0" required>
+      </div>
+
+      <div class="col-md-12 mt-4">
+        <label class="form-label fw-bold">ปัจจุบันคุณอยากเลิกสูบบุหรี่หรือไม่</label>
+        <select class="form-select" id="wantToQuit" required>
+          <option value="">เลือก</option>
+          <option value="อยาก">อยาก</option>
+          <option value="ไม่อยาก">ไม่อยาก</option>
+          <option value="ไม่แน่ใจ">ไม่แน่ใจ</option>
+        </select>
+      </div>
+
+      <!-- แบบประเมินความรุนแรง -->
+      <div id="dependenceAssessment" class="mt-4 d-none">
+        <h5 class="fw-bold">ประเมินความรุนแรงของการติดบุหรี่</h5>
+
+        <div class="col-md-12">
+          <label class="form-label">1. หลังตื่นนอนตอนเช้าคุณสูบบุหรี่มวนแรกเมื่อไหร่</label>
+          <select class="form-select" id="q1">
+            <option value="">เลือก</option>
+            <option>ภายใน 5 นาที หลังตื่นนอน</option>
+            <option>6 - 30 นาที หลังตื่นนอน</option>
+            <option>31 - 60 นาที หลังตื่นนอน</option>
+            <option>60 นาทีขึ้นไป หลังตื่นนอน</option>
+          </select>
+        </div>
+
+        <div class="col-md-12 mt-2">
+          <label class="form-label">2. คุณรู้สึกอึดอัดใจเมื่อต้องอยู่ในเขตปลอดบุหรี่หรือไม่</label>
+          <select class="form-select" id="q2">
+            <option value="">เลือก</option>
+            <option>ใช่</option>
+            <option>ไม่ใช่</option>
+          </select>
+        </div>
+
+        <div class="col-md-12 mt-2">
+          <label class="form-label">3. บุหรี่มวนไหนที่คุณไม่อยากเลิกมากที่สุด</label>
+          <select class="form-select" id="q3">
+            <option value="">เลือก</option>
+            <option>มวนแรกของวัน</option>
+            <option>มวนอื่นๆ</option>
+          </select>
+        </div>
+
+        <div class="col-md-12 mt-2">
+          <label class="form-label">4. โดยปกติคุณสูบบุหรี่วันละกี่มวน</label>
+          <select class="form-select" id="q4">
+            <option value="">เลือก</option>
+            <option>น้อยกว่าหรือเท่ากับ 10 มวน</option>
+            <option>11 - 20 มวน</option>
+            <option>21 - 30 มวน</option>
+            <option>มากกว่า 30 มวนขึ้นไป</option>
+          </select>
+        </div>
+
+        <div class="col-md-12 mt-2">
+          <label class="form-label">5. คุณสูบบุหรี่ภายใน 2-3 ชั่วโมงแรกหลังตื่นนอน มากกว่าเวลาอื่นหรือไม่</label>
+          <select class="form-select" id="q5">
+            <option value="">เลือก</option>
+            <option>ใช่</option>
+            <option>ไม่ใช่</option>
+          </select>
+        </div>
+
+        <div class="col-md-12 mt-2">
+          <label class="form-label">6. คุณยังคงสูบบุหรี่แม้จะนอนป่วยอยู่ในโรงพยาบาลหรือไม่</label>
+          <select class="form-select" id="q6">
+            <option value="">เลือก</option>
+            <option>ใช่</option>
+            <option>ไม่ใช่</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="col-12 text-center mt-4">
+        <button type="button" id="submitBtn" class="btn btn-lg btn-primary">ส่งข้อมูลติดตามผล</button>
+      </div>
+    </form>
+
+    <!-- Success -->
+    <div id="successMessage" class="d-none text-center p-4 bg-white rounded shadow-sm mt-4">
+      <h3 class="text-success fw-bold">✅ บันทึกการติดตามผลเรียบร้อย</h3>
+      <p>ขอบคุณที่ตอบแบบติดตามผล</p>
+    </div>
+  </div>
+
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script>
+    let userId = "";
+
+    async function initLiff() {
+      try {
+        await liff.init({ liffId: "2007904397-o7eP51Zq" });
+
+        if (!liff.isLoggedIn()) {
+          liff.login();
+          return;
+        }
+
+        const profile = await liff.getProfile();
+        userId = profile.userId;
+        document.getElementById("userId").value = userId;
+
+        // 🔎 ไปค้นชื่อ-นามสกุลจาก Google Sheet
+        fetch("https://script.google.com/macros/s/AKfycbxKvwoVTft5-_xGjM3czNhWqUJ7X-Z-yLSV_z3j8NGjlO2x1mDSlXzkpCunaUHH5YFpdw/exec?userId=" + userId)
+          .then(res => res.json())
+          .then(data => {
+            if (data.status === "success") {
+              document.getElementById("firstName").value = data.firstName;
+              document.getElementById("lastName").value = data.lastName;
+              // ✅ ซ่อน loading และโชว์ฟอร์ม
+              document.getElementById("loading").classList.add("d-none");
+              document.getElementById("followupForm").classList.remove("d-none");
+            } else {
+              alert("ไม่พบข้อมูลผู้ใช้");
+            }
+          })
+          .catch(err => console.error(err));
+      } catch (err) {
+        console.error("LIFF init error", err);
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", initLiff);
+  </script>
+
+  <script>
+    // แสดง/ซ่อนแบบประเมิน
+    document.getElementById("wantToQuit").addEventListener("change", function() {
+      const assessment = document.getElementById("dependenceAssessment");
+      if (this.value === "อยาก" || this.value === "ไม่แน่ใจ") {
+        assessment.classList.remove("d-none");
+      } else {
+        assessment.classList.add("d-none");
+      }
+    });
+
+    // Submit form
+    $("#submitBtn").on("click", function() {
+      console.log('userId:', userId);
+      const data = {
+        userId: $("#userId").val(),
+        timestamp: new Date().toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' }),
+        firstName: $("#firstName").val(),
+        lastName: $("#lastName").val(),
+        cigarettesPerDay: $("#cigarettesPerDay").val(),
+        smokingYears: $("#smokingYears").val(),
+        smokingMonths: $("#smokingMonths").val(),
+        quitAttempts: $("#quitAttempts").val(),
+        wantToQuit: $("#wantToQuit").val(),
+        q1: $("#q1").val(),
+        q2: $("#q2").val(),
+        q3: $("#q3").val(),
+        q4: $("#q4").val(),
+        q5: $("#q5").val(),
+        q6: $("#q6").val(),
+      };
+
+      fetch("https://script.google.com/macros/s/AKfycbyq1FPHA3KW1Gg7HC3ZdL2CUyW1H89kfPFTZYkKcALOLW-JpUiCs3QUJo0aL0JPqsGn/exec", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      })
+      .then(async res => {
+        const text = await res.text();
+        console.log("Raw response:", text);
+        return JSON.parse(text);
+      })
+      .then(res => {
+        console.log("Parsed JSON:", res);
+        if (res.status === 'success') {
+          document.getElementById("followupForm").classList.add("d-none");
+          document.getElementById("successMessage").classList.remove("d-none");
+        } else {
+          alert("เกิดข้อผิดพลาด: " + res.message);
+        }
+      })
+      .catch(err => alert("Error: " + err.message));
+    }); // ✅ ปิดวงเล็บตรงนี้
+  </script>
+</body>
+</html>
