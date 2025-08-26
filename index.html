@@ -239,7 +239,7 @@
     formData.append("q6", $("#q6").val());
 
     // ✅ ส่งข้อมูลไป Google Apps Script
-    fetch("https://script.google.com/macros/s/AKfycbyq1FPHA3KW1Gg7HC3ZdL2CUyW1H89kfPFTZYkKcALOLW-JpUiCs3QUJo0aL0JPqsGn/exec", {
+    fetch("https://script.google.com/macros/s/AKfycbxfwBQ9paKOQ1ke7dAQE7p6pklh1x9dXM5aVzoeN-XssBRHSpQx29JdEQTDsD1Txe53/exec", {
       method: "POST",
       body: formData
     })
@@ -255,3 +255,4 @@
     .catch(err => alert("Error: " + err.message));
   });
 </script>
+
