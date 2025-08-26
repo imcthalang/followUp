@@ -214,50 +214,37 @@
     }
 
     if (wantToQuit === "อยาก" || wantToQuit === "ไม่แน่ใจ") {
-      const q1 = $("#q1").val();
-      const q2 = $("#q2").val();
-      const q3 = $("#q3").val();
-      const q4 = $("#q4").val();
-      const q5 = $("#q5").val();
-      const q6 = $("#q6").val();
-
-      if (!q1 || !q2 || !q3 || !q4 || !q5 || !q6) {
+      if (!$("#q1").val() || !$("#q2").val() || !$("#q3").val() || !$("#q4").val() || !$("#q5").val() || !$("#q6").val()) {
         alert("กรุณาตอบคำถามประเมินความรุนแรงให้ครบทุกข้อ");
         return;
       }
     }
 
-    // ✅ ถ้าผ่าน validation → ส่งข้อมูล
-    const data = {
-      userId: $("#userId").val(),
-      timestamp: new Date().toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' }),
-      firstName: $("#firstName").val(),
-      lastName: $("#lastName").val(),
-      cigarettesPerDay: $("#cigarettesPerDay").val(),
-      smokingYears: $("#smokingYears").val(),
-      smokingMonths: $("#smokingMonths").val(),
-      quitAttempts: $("#quitAttempts").val(),
-      wantToQuit: wantToQuit,
-      q1: $("#q1").val(),
-      q2: $("#q2").val(),
-      q3: $("#q3").val(),
-      q4: $("#q4").val(),
-      q5: $("#q5").val(),
-      q6: $("#q6").val(),
-    };
+    // ✅ เตรียมข้อมูลเป็น FormData
+    const formData = new FormData();
+    formData.append("userId", $("#userId").val());
+    formData.append("timestamp", new Date().toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' }));
+    formData.append("firstName", $("#firstName").val());
+    formData.append("lastName", $("#lastName").val());
+    formData.append("cigarettesPerDay", $("#cigarettesPerDay").val());
+    formData.append("smokingYears", $("#smokingYears").val());
+    formData.append("smokingMonths", $("#smokingMonths").val());
+    formData.append("quitAttempts", $("#quitAttempts").val());
+    formData.append("wantToQuit", wantToQuit);
+    formData.append("q1", $("#q1").val());
+    formData.append("q2", $("#q2").val());
+    formData.append("q3", $("#q3").val());
+    formData.append("q4", $("#q4").val());
+    formData.append("q5", $("#q5").val());
+    formData.append("q6", $("#q6").val());
 
+    // ✅ ส่งข้อมูลไป Google Apps Script
     fetch("https://script.google.com/macros/s/AKfycbyq1FPHA3KW1Gg7HC3ZdL2CUyW1H89kfPFTZYkKcALOLW-JpUiCs3QUJo0aL0JPqsGn/exec", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data)
+      body: formData
     })
-    .then(async res => {
-      const text = await res.text();
-      console.log("Raw response:", text);
-      return JSON.parse(text);
-    })
+    .then(res => res.json())
     .then(res => {
-      console.log("Parsed JSON:", res);
       if (res.status === 'success') {
         document.getElementById("followupForm").classList.add("d-none");
         document.getElementById("successMessage").classList.remove("d-none");
@@ -268,6 +255,3 @@
     .catch(err => alert("Error: " + err.message));
   });
 </script>
-
-
-
