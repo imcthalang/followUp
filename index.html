@@ -194,59 +194,80 @@
 
   <script>
     // แสดง/ซ่อนแบบประเมิน
-    document.getElementById("wantToQuit").addEventListener("change", function() {
-      const assessment = document.getElementById("dependenceAssessment");
-      if (this.value === "อยาก" || this.value === "ไม่แน่ใจ") {
-        assessment.classList.remove("d-none");
-      } else {
-        assessment.classList.add("d-none");
+  document.getElementById("wantToQuit").addEventListener("change", function() {
+    const assessment = document.getElementById("dependenceAssessment");
+    if (this.value === "อยาก" || this.value === "ไม่แน่ใจ") {
+      assessment.classList.remove("d-none");
+    } else {
+      assessment.classList.add("d-none");
+    }
+  });
+
+  // Submit form
+  $("#submitBtn").on("click", function() {
+    const wantToQuit = $("#wantToQuit").val();
+
+    // ✅ Validation
+    if (!wantToQuit) {
+      alert("กรุณาเลือกความต้องการเลิกบุหรี่");
+      return;
+    }
+
+    if (wantToQuit === "อยาก" || wantToQuit === "ไม่แน่ใจ") {
+      const q1 = $("#q1").val();
+      const q2 = $("#q2").val();
+      const q3 = $("#q3").val();
+      const q4 = $("#q4").val();
+      const q5 = $("#q5").val();
+      const q6 = $("#q6").val();
+
+      if (!q1 || !q2 || !q3 || !q4 || !q5 || !q6) {
+        alert("กรุณาตอบคำถามประเมินความรุนแรงให้ครบทุกข้อ");
+        return;
       }
-    });
+    }
 
-    // Submit form
-    $("#submitBtn").on("click", function() {
-      console.log('userId:', userId);
-      const data = {
-        userId: $("#userId").val(),
-        timestamp: new Date().toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' }),
-        firstName: $("#firstName").val(),
-        lastName: $("#lastName").val(),
-        cigarettesPerDay: $("#cigarettesPerDay").val(),
-        smokingYears: $("#smokingYears").val(),
-        smokingMonths: $("#smokingMonths").val(),
-        quitAttempts: $("#quitAttempts").val(),
-        wantToQuit: $("#wantToQuit").val(),
-        q1: $("#q1").val(),
-        q2: $("#q2").val(),
-        q3: $("#q3").val(),
-        q4: $("#q4").val(),
-        q5: $("#q5").val(),
-        q6: $("#q6").val(),
-      };
+    // ✅ ถ้าผ่าน validation → ส่งข้อมูล
+    const data = {
+      userId: $("#userId").val(),
+      timestamp: new Date().toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' }),
+      firstName: $("#firstName").val(),
+      lastName: $("#lastName").val(),
+      cigarettesPerDay: $("#cigarettesPerDay").val(),
+      smokingYears: $("#smokingYears").val(),
+      smokingMonths: $("#smokingMonths").val(),
+      quitAttempts: $("#quitAttempts").val(),
+      wantToQuit: wantToQuit,
+      q1: $("#q1").val(),
+      q2: $("#q2").val(),
+      q3: $("#q3").val(),
+      q4: $("#q4").val(),
+      q5: $("#q5").val(),
+      q6: $("#q6").val(),
+    };
 
-      fetch("https://script.google.com/macros/s/AKfycbyrjDTmU-LQPqt2iJhQGLyCE7uHw1CieXsEkuJCob0Zw6hUoB4UZ3i7MOSsMZ3VAt6W/exec", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-      })
-      .then(async res => {
-        const text = await res.text();
-        console.log("Raw response:", text);
-        return JSON.parse(text);
-      })
-      .then(res => {
-        console.log("Parsed JSON:", res);
-        if (res.status === 'success') {
-          document.getElementById("followupForm").classList.add("d-none");
-          document.getElementById("successMessage").classList.remove("d-none");
-        } else {
-          alert("เกิดข้อผิดพลาด: " + res.message);
-        }
-      })
-      .catch(err => alert("Error: " + err.message));
-    }); // ✅ ปิดวงเล็บตรงนี้
-  </script>
-</body>
-</html>
+    fetch("https://script.google.com/macros/s/AKfycbyq1FPHA3KW1Gg7HC3ZdL2CUyW1H89kfPFTZYkKcALOLW-JpUiCs3QUJo0aL0JPqsGn/exec", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    })
+    .then(async res => {
+      const text = await res.text();
+      console.log("Raw response:", text);
+      return JSON.parse(text);
+    })
+    .then(res => {
+      console.log("Parsed JSON:", res);
+      if (res.status === 'success') {
+        document.getElementById("followupForm").classList.add("d-none");
+        document.getElementById("successMessage").classList.remove("d-none");
+      } else {
+        alert("เกิดข้อผิดพลาด: " + res.message);
+      }
+    })
+    .catch(err => alert("Error: " + err.message));
+  });
+</script>
+
 
 
