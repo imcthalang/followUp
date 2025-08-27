@@ -144,6 +144,12 @@
       </div>
     </form>
 
+    <!-- Saving Loader -->
+    <div id="saving" class="d-none text-center p-4">
+      <div class="spinner-border text-success" role="status"></div>
+      <p class="mt-2">กำลังบันทึกข้อมูล...</p>
+    </div>
+    
     <!-- Success -->
     <div id="successMessage" class="d-none text-center p-4 bg-white rounded shadow-sm mt-4">
       <h3 class="text-success fw-bold">✅ บันทึกการติดตามผลเรียบร้อย</h3>
@@ -204,57 +210,67 @@
   });
 
   // Submit form
-  $("#submitBtn").on("click", function() {
-    const wantToQuit = $("#wantToQuit").val();
+$("#submitBtn").on("click", function() {
+  const wantToQuit = $("#wantToQuit").val();
 
-    // ✅ Validation
-    if (!wantToQuit) {
-      alert("กรุณาเลือกความต้องการเลิกบุหรี่");
+  // ✅ Validation
+  if (!wantToQuit) {
+    alert("กรุณาเลือกความต้องการเลิกบุหรี่");
+    return;
+  }
+  if (wantToQuit === "อยาก" || wantToQuit === "ไม่แน่ใจ") {
+    if (!$("#q1").val() || !$("#q2").val() || !$("#q3").val() || !$("#q4").val() || !$("#q5").val() || !$("#q6").val()) {
+      alert("กรุณาตอบคำถามประเมินความรุนแรงให้ครบทุกข้อ");
       return;
     }
+  }
 
-    if (wantToQuit === "อยาก" || wantToQuit === "ไม่แน่ใจ") {
-      if (!$("#q1").val() || !$("#q2").val() || !$("#q3").val() || !$("#q4").val() || !$("#q5").val() || !$("#q6").val()) {
-        alert("กรุณาตอบคำถามประเมินความรุนแรงให้ครบทุกข้อ");
-        return;
-      }
+  // ✅ ซ่อนฟอร์ม แล้วโชว์ "กำลังบันทึก"
+  $("#followupForm").addClass("d-none");
+  $("#saving").removeClass("d-none");
+
+  // ✅ เตรียมข้อมูล
+  const formData = new FormData();
+  formData.append("userId", $("#userId").val());
+  formData.append("timestamp", new Date().toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' }));
+  formData.append("firstName", $("#firstName").val());
+  formData.append("lastName", $("#lastName").val());
+  formData.append("cigarettesPerDay", $("#cigarettesPerDay").val());
+  formData.append("smokingYears", $("#smokingYears").val());
+  formData.append("smokingMonths", $("#smokingMonths").val());
+  formData.append("quitAttempts", $("#quitAttempts").val());
+  formData.append("wantToQuit", wantToQuit);
+  formData.append("q1", $("#q1").val());
+  formData.append("q2", $("#q2").val());
+  formData.append("q3", $("#q3").val());
+  formData.append("q4", $("#q4").val());
+  formData.append("q5", $("#q5").val());
+  formData.append("q6", $("#q6").val());
+
+  // ✅ ส่งข้อมูลไป Google Apps Script
+  fetch("https://script.google.com/macros/s/AKfycbxfwBQ9paKOQ1ke7dAQE7p6pklh1x9dXM5aVzoeN-XssBRHSpQx29JdEQTDsD1Txe53/exec", {
+    method: "POST",
+    body: formData
+  })
+  .then(res => res.json())
+  .then(res => {
+    $("#saving").addClass("d-none"); // 🔴 ซ่อน "กำลังบันทึก"
+    if (res.status === 'success') {
+      $("#successMessage").removeClass("d-none"); // ✅ โชว์ข้อความสำเร็จ
+    } else {
+      alert("เกิดข้อผิดพลาด: " + res.message);
+      $("#followupForm").removeClass("d-none"); // ⬅️ เอาฟอร์มกลับมาให้แก้ไข
     }
-
-    // ✅ เตรียมข้อมูลเป็น FormData
-    const formData = new FormData();
-    formData.append("userId", $("#userId").val());
-    formData.append("timestamp", new Date().toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' }));
-    formData.append("firstName", $("#firstName").val());
-    formData.append("lastName", $("#lastName").val());
-    formData.append("cigarettesPerDay", $("#cigarettesPerDay").val());
-    formData.append("smokingYears", $("#smokingYears").val());
-    formData.append("smokingMonths", $("#smokingMonths").val());
-    formData.append("quitAttempts", $("#quitAttempts").val());
-    formData.append("wantToQuit", wantToQuit);
-    formData.append("q1", $("#q1").val());
-    formData.append("q2", $("#q2").val());
-    formData.append("q3", $("#q3").val());
-    formData.append("q4", $("#q4").val());
-    formData.append("q5", $("#q5").val());
-    formData.append("q6", $("#q6").val());
-
-    // ✅ ส่งข้อมูลไป Google Apps Script
-    fetch("https://script.google.com/macros/s/AKfycbxfwBQ9paKOQ1ke7dAQE7p6pklh1x9dXM5aVzoeN-XssBRHSpQx29JdEQTDsD1Txe53/exec", {
-      method: "POST",
-      body: formData
-    })
-    .then(res => res.json())
-    .then(res => {
-      if (res.status === 'success') {
-        document.getElementById("followupForm").classList.add("d-none");
-        document.getElementById("successMessage").classList.remove("d-none");
-      } else {
-        alert("เกิดข้อผิดพลาด: " + res.message);
-      }
-    })
-    .catch(err => alert("Error: " + err.message));
+  })
+  .catch(err => {
+    $("#saving").addClass("d-none");
+    alert("Error: " + err.message);
+    $("#followupForm").removeClass("d-none");
   });
+});
+
 </script>
+
 
 
 
