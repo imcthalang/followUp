@@ -351,14 +351,17 @@ $("#submitBtn").on("click", function() {
     method: "POST",
     body: formData
   })
-  .then(res => res.json())
+    .then(res => res.json())
   .then(res => {
-      // ✅ แสดง success + ผลรวมคะแนน
+    if (res.status === 'success') {
+     // ✅ แสดง success + ผลรวมคะแนน
       showSuccessMessage(dependenceScore, dependenceLevel);
     } else {
       alert('เกิดข้อผิดพลาด: ' + data.message);
     }
-  });
+  })
+  .catch(err => alert("Error: " + err.message));
+});
   
 
 
@@ -382,6 +385,7 @@ function showSuccessMessage(dependenceScore, dependenceLevel) {
 </body>
 
 </html>
+
 
 
 
