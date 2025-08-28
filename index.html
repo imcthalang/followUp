@@ -339,8 +339,8 @@ $("#submitBtn").on("click", function() {
   formData.append("dependenceLevel", result.level);
   formData.append("dependenceAdvice", result.advice);
 
-  // ✅ ส่งข้อมูลไป Google Apps Script
-  fetch("https://script.google.com/macros/s/AKfycbxfwBQ9paKOQ1ke7dAQE7p6pklh1x9dXM5aVzoeN-XssBRHSpQx29JdEQTDsD1Txe53/exec", {
+  // ✅ ส่งข้อมูลไป Google Apps Script BEFollowUpPTCigar
+  fetch("https://script.google.com/macros/s/AKfycbyBXqgP7p-CSfyc8aqgGpIzBDVpDnteyPu_VWg0oULr8xP_3G1asBufuNA-mDtn31Sj/exec", {
     method: "POST",
     body: formData
   })
@@ -352,9 +352,9 @@ $("#submitBtn").on("click", function() {
         method: 'POST',
         body: JSON.stringify({ 
           userId, 
-          dependenceScore,
-    	    dependenceLevel,
-          dependenceAdvice
+          	dependenceScore,
+    		dependenceLevel,
+          	dependenceAdvice
         })
       });
 
@@ -388,4 +388,5 @@ function showSuccessMessage(dependenceScore, dependenceLevel) {
 </body>
 
 </html>
+
 
