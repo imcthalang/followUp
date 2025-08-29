@@ -325,44 +325,44 @@ $("#submitBtn").on("click", function() {
   $("#saving").removeClass("d-none");
 
   // ✅ เตรียมข้อมูล
-  const result = scoreDependence();
-  const formData = new FormData();
-  formData.append("userId", $("#userId").val());
-  formData.append("timestamp", new Date().toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' }));
-  formData.append("fU", $("#fU").val());
-  formData.append("firstName", $("#firstName").val());
-  formData.append("lastName", $("#lastName").val());
-  formData.append("cigarettesPerDay", $("#cigarettesPerDay").val());
-  formData.append("smokingYears", $("#smokingYears").val());
-  formData.append("smokingMonths", $("#smokingMonths").val());
-  formData.append("quitAttempts", $("#quitAttempts").val());
-  formData.append("wantToQuit", $("#wantToQuit").val());
-  formData.append("q1", $("#q1").val());
-  formData.append("q2", $("#q2").val());
-  formData.append("q3", $("#q3").val());
-  formData.append("q4", $("#q4").val());
-  formData.append("q5", $("#q5").val());
-  formData.append("q6", $("#q6").val());
-  formData.append("dependenceScore", result.total);
-  formData.append("dependenceLevel", result.level);
-  formData.append("dependenceAdvice", result.advice);
-
-  // ✅ ส่งข้อมูลไป Google Apps Script BEFollowUpPTCigar
-  fetch("https://script.google.com/macros/s/AKfycbwwaoZmCdBc1sdxz9HlSMsAVEhmhCRB6yvP0ACPpp-sbbL9kVu-HqqzClM8pbf3cHIc/exec", {
-    method: "POST",
-    body: formData
-  })
-    .then(res => res.json())
-  	.then(res => {
-  		if (res.status === 'success') {
-     // ✅ แสดง success + ผลรวมคะแนน
-     showSuccessMessage(result.total, result.level);
-  	} else {
-     alert('เกิดข้อผิดพลาด: ' + res.message);
-  	}
-	});
-
-  });
+const result = scoreDependence();
+const payload = {
+  userId: $("#userId").val(),
+  timestamp: new Date().toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' }),
+  fU: $("#fU").val(),
+  firstName: $("#firstName").val(),
+  lastName: $("#lastName").val(),
+  cigarettesPerDay: $("#cigarettesPerDay").val(),
+  smokingYears: $("#smokingYears").val(),
+  smokingMonths: $("#smokingMonths").val(),
+  quitAttempts: $("#quitAttempts").val(),
+  wantToQuit: $("#wantToQuit").val(),
+  q1: $("#q1").val(),
+  q2: $("#q2").val(),
+  q3: $("#q3").val(),
+  q4: $("#q4").val(),
+  q5: $("#q5").val(),
+  q6: $("#q6").val(),
+  dependenceScore: result.total,
+  dependenceLevel: result.level,
+  dependenceAdvice: result.advice
+};
+	// บันทึกข้อมูล BEFollowUpPTCigar
+fetch("https://script.google.com/macros/s/AKfycbxsTEVd0svdNrPDIDLyGnFyXBYuYk4MDwkJ1ANa_8sfJ_0swnz0SmgwDykYqF9Da57D/exec", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(payload)
+})
+.then(res => res.json())
+.then(res => {
+  if (res.status === "success") {
+    showSuccessMessage(result.total, result.level);
+  } else {
+    alert("เกิดข้อผิดพลาด: " + res.message);
+  }
+})
+.catch(err => alert("Error: " + err.message));
+}
 
 
 function showSuccessMessage(dependenceScore, dependenceLevel) {
@@ -385,6 +385,7 @@ function showSuccessMessage(dependenceScore, dependenceLevel) {
 </body>
 
 </html>
+
 
 
 
