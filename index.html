@@ -352,21 +352,20 @@ $("#submitBtn").on("click", function() {
     body: formData
   })
     .then(res => res.json())
-  .then(res => {
-    if (res.status === 'success') {
+  	.then(res => {
+  		if (res.status === 'success') {
      // ✅ แสดง success + ผลรวมคะแนน
-      showSuccessMessage(dependenceScore, dependenceLevel);
-    } else {
-      alert('เกิดข้อผิดพลาด: ' + data.message);
-    }
-  })
-  .catch(err => alert("Error: " + err.message));
-});
+     showSuccessMessage(result.total, result.level);
+  	} else {
+     alert('เกิดข้อผิดพลาด: ' + res.message);
+  	}
+	})
+
   
 
 
 function showSuccessMessage(dependenceScore, dependenceLevel) {
-  document.getElementById("followupForm,").classList.add("d-none");
+  document.getElementById("followupForm").classList.add("d-none");
   document.getElementById("saving").classList.add("d-none");
   document.getElementById("successMessage").classList.remove("d-none");
 
@@ -385,6 +384,7 @@ function showSuccessMessage(dependenceScore, dependenceLevel) {
 </body>
 
 </html>
+
 
 
 
