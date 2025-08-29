@@ -307,16 +307,6 @@ function scoreDependence() {
   return { total, level, advice };
 }
 
-    /* ✅ แสดงผลแบบ Live */
-    function updateDependenceResult(){
-      const { total, level } = scoreDependence();
-      const box=document.getElementById('dependenceResult');
-      if(total===null){ box.classList.add('d-none'); box.innerHTML=''; return; }
-      box.classList.remove('d-none'); box.innerHTML=`<div class="fw-bold">คะแนนรวม: ${total} / 10</div><div>ผลแปล: ${level}</div>`;
-    }
-    ['#q1','#q2','#q3','#q4','#q5','#q6'].forEach(id=>$(document).on('change',id,updateDependenceResult));
-  
-    
     // Submit form
 $("#submitBtn").on("click", function() {
   console.log("=== กดปุ่มแล้ว ===");
@@ -362,7 +352,7 @@ fetch("https://script.google.com/macros/s/AKfycbxsTEVd0svdNrPDIDLyGnFyXBYuYk4MDw
   }
 })
 .catch(err => alert("Error: " + err.message));
-}
+});
 
 
 function showSuccessMessage(dependenceScore, dependenceLevel) {
@@ -385,6 +375,7 @@ function showSuccessMessage(dependenceScore, dependenceLevel) {
 </body>
 
 </html>
+
 
 
 
