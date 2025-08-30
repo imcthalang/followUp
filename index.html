@@ -360,12 +360,24 @@ fetch("https://script.google.com/macros/s/AKfycbzDnvRrfxObN4sppZ6YGcWieZ4EWn8C59
 .then(res => {
   console.log("POST Response:", res);
   if (res.status === "success") {
-    showSuccessMessage(result.total, result.level);
-  } else {
-    alert("เกิดข้อผิดพลาด: " + res.message);
-  }
-})
-.catch(err => alert("Error: " + err.message));
+      // ส่งข้อความ LINE SentLineTHK3M
+      fetch('https://script.google.com/macros/s/AKfycbxqnZ6OPiiK2R9pF-uq7OQCA6srnvcjT1S_cJEmoilLJRCjfIpulUl-GWQ3CUGkeJQk/exec', {
+        method: 'POST',
+        body: JSON.stringify({ 
+          userId, 
+		  dependenceScore,
+    	  dependenceLevel,
+          dependenceAdvice
+        })
+      });
+
+      // ✅ แสดง success + ผลรวมคะแนน
+      showSuccessMessage(result.total, result.level);
+    } else {
+      alert('เกิดข้อผิดพลาด: ' + data.message);
+    }
+  })
+  .catch(err => alert("Error: " + err.message));
 });
 
 
@@ -388,6 +400,7 @@ function showSuccessMessage(dependenceScore, dependenceLevel) {
   </script>
 </body>
 </html>
+
 
 
 
