@@ -308,17 +308,28 @@ function scoreDependence() {
 }
 
     // Submit form
-$("#submitBtn").on("click", function() {
+$("#submitBtn").on("click", function(e) {
   console.log("=== กดปุ่มแล้ว ===");
   // ✅ ซ่อนฟอร์ม แล้วโชว์ "กำลังบันทึก"
   $("#followupForm").addClass("d-none");
   $("#saving").removeClass("d-none");
+	
+	console.log('Submit clicked');
+ 	console.log('userId:', userId);
 
   // ✅ เตรียมข้อมูล
 const result = scoreDependence();
-const payload = {
-  userId: $("#userId").val(),
-  timestamp: new Date().toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' }),
+const data = {
+  userId,
+  timestamp: new Date().toLocaleString('th-TH', {
+      timeZone: 'Asia/Bangkok',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    }),
   fU: $("#fU").val(),
   firstName: $("#firstName").val(),
   lastName: $("#lastName").val(),
@@ -332,16 +343,18 @@ const payload = {
   q3: $("#q3").val(),
   q4: $("#q4").val(),
   q5: $("#q5").val(),
-  q6: $("#q6").val(),
-  dependenceScore: result.total,
-  dependenceLevel: result.level,
-  dependenceAdvice: result.advice
+  q6: $("#q6").val()
 };
+	// ✅ ประเมินคะแนนตรงนี้
+  const { total: dependenceScore, level: dependenceLevel, advice: dependenceAdvice } = scoreDependence();
+  data.dependenceScore = dependenceScore;
+  data.dependenceLevel = dependenceLevel;
+  data.dependenceAdvice = dependenceAdvice;
 	// บันทึกข้อมูล BEFollowUpPTCigar
 fetch("https://script.google.com/macros/s/AKfycbx42l1G1TAUc-g04K5haSm1dVua8hllbemK_94qzKBUhnVs7GNu4V5pqOYixkQZ5Q5D/exec", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
-  body: JSON.stringify(payload)
+  body: JSON.stringify(data)
 })
 .then(res => res.json())
 .then(res => {
@@ -374,5 +387,6 @@ function showSuccessMessage(dependenceScore, dependenceLevel) {
   </script>
 </body>
 </html>
+
 
 
