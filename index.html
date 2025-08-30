@@ -351,13 +351,14 @@ const data = {
   data.dependenceLevel = dependenceLevel;
   data.dependenceAdvice = dependenceAdvice;
 	// บันทึกข้อมูล BEFollowUpPTCigar
-fetch("https://script.google.com/macros/s/AKfycbwWE_ppS6v7AuZ2G_8C6_gcmLbdaTBsE2xcqop56G05Oxi6HcikLG86BxDUIRpyhlzf/exec", {
+fetch("https://script.google.com/macros/s/AKfycbzDnvRrfxObN4sppZ6YGcWieZ4EWn8C594hWbsYJV60v1lzu5s71TlK2Mogo3T3CKb_/exec", {
   method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify(data)
+  headers: { "Content-Type": "application/x-www-form-urlencoded" },
+  body: new URLSearchParams(data)   // 👈 ส่งเป็น form
 })
 .then(res => res.json())
 .then(res => {
+  console.log("POST Response:", res);
   if (res.status === "success") {
     showSuccessMessage(result.total, result.level);
   } else {
@@ -387,6 +388,7 @@ function showSuccessMessage(dependenceScore, dependenceLevel) {
   </script>
 </body>
 </html>
+
 
 
 
