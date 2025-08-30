@@ -191,7 +191,7 @@
         document.getElementById("userId").value = userId;
 
         // 🔎 ไปค้นชื่อ-นามสกุลจาก Google Sheet app script FollowPTcigar
-        fetch("https://script.google.com/macros/s/AKfycbxvxZ-UIpB009mJR9vygzFM3VK-Kn6Et3ZSmUqiyNLmEwlsxq-c3HUoL0YoLcS1RROVng/exec?userId=" + userId)
+        fetch("https://script.google.com/macros/s/AKfycbzSZWQ4vPn2uDlMjsRdqwBaaio-UIwML7cmJmDhamy2n8-wqGv23r2m7HwBftM0sC8erg/exec?userId=" + userId)
           .then(res => res.json())
           .then(data => {
             if (data.status === "success") {
@@ -338,7 +338,7 @@ const payload = {
   dependenceAdvice: result.advice
 };
 	// บันทึกข้อมูล BEFollowUpPTCigar
-fetch("https://script.google.com/macros/s/AKfycbxvxZ-UIpB009mJR9vygzFM3VK-Kn6Et3ZSmUqiyNLmEwlsxq-c3HUoL0YoLcS1RROVng/exec", {
+fetch("https://script.google.com/macros/s/AKfycbyBtit_1uu9uR1mU6cKbB2FUWA15_iloTH85M_A0_ycqkjYJW3oc5f5619MKfPdqQ3m/exec", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify(payload)
@@ -373,17 +373,5 @@ function showSuccessMessage(dependenceScore, dependenceLevel) {
 
   </script>
 </body>
-
 </html>
-
-
-
-
-
-
-
-
-
-
-
 
